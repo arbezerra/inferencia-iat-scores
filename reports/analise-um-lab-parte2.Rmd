@@ -6,7 +6,7 @@ output:
     code_folding: hide
 theme: sandstone
 params: 
-    arquivo_dados: "data/sdsu.csv"
+    arquivo_dados: "data/pi.csv"
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -146,15 +146,16 @@ grid.arrange(p1, p2, ncol = 2)
 ```
 
 ### Conclusão
+```{r}
+sumario = iat %>%
+  group_by(sex) %>%
+  summarize(
+    avg = mean(d_art),
+    dp = sd(d_art),
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(names_from = sex, values_from = c(avg, dp, n))
+```
 
-**Apague esse parágrafo, e no seguinte substitua no mínimo as partes em negrito por texto seu. Pode substituir o quanto quiser**.
-
-Em média, as mulheres que participaram do experimento tiveram uma associação implícita (medida pelo IAT) com a matemática **positiva/negativa** e **fraca/média/forte** (**média XXX, desv. padrão YYY, N = ZZZ**). Homens tiveram uma associação **positiva/negativa** com a matemática, portanto **maior/menor** que a das mulheres (**média XXX , desv. padrão YYY, N = ZZZ**). Houve portanto uma **grande/considerável/pequena/desprezível** diferença entre homens e mulheres (**diferença das médias XXXX, 95% CI [CCC, DDD]**). Os dados de nosso experimento portanto apontam que... **COMPLETE AQUI**.
-
---- 
-*Exemplos de possíveis conclusões para completar*
-
-  * mulheres têm uma associação negativa consideravelmente mais forte, com uma diferença que provavelmente está entre 0.6 e 1.0 ponto na escala IAT, o suficiente para diferenciar uma associação neutra de uma muito forte contra a matemática.
-  * mulheres têm uma associação negativa mais forte, porém não é claro se essa diferença é grande, moderada ou pequena. É necessário coletar mais dados para determinar se a diferença é relevante ou negligenciável. 
-  * mulheres podem ter um associação negativa forte, pode não haver diferença entre sexos ou homens podem ter atitudes negativas um pouco mais fortes ou moderadamente mais fortes. 
-  * não há evidência clara de uma diferença relevante entre sexos: os dados apontam que ela pode não existir e, se ela existir, ela é pequena em qualquer das direções. 
+Em média, as mulheres que participaram do experimento tiveram uma associação implícita (medida pelo IAT) com a matemática **negativa** e **forte** (**média `r sumario$avg_f`, desv. padrão `r sumario$dp_f`, N = `r sumario$n_f`**). Homens tiveram uma associação **negativa** com a matemática, porém **mais fraca** que a das mulheres (**média `r sumario$avg_m`, desv. padrão `r sumario$dp_m`, N = `r sumario$n_m`**). Houve portanto uma **pequena** diferença entre homens e mulheres (**diferença das médias `r ci$statistic`, 95% CI [`r ci$conf.low`, `r ci$conf.high`]**). Os dados de nosso experimento, portanto, apontam que **mulheres têm uma associação negativa forte com a matemática e os homens também têm uma associação negativa, porém um pouco mais fraca que a das mulheres.**
